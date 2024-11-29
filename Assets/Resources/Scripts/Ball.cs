@@ -23,4 +23,22 @@ public class Ball : MonoBehaviour
     {
         
     }
+    void MoveToTarget(Vector3 target)
+    {
+        Vector3 direction = (target - transform.position).normalized;
+        transform.position += direction * speed * Time.deltaTime;
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        Debug.Log("Collision with " + other.gameObject.name);
+        if(other.gameObject.CompareTag("Table"))
+        {
+
+        }
+        else if (other.gameObject.CompareTag("Racket"))
+        {
+            Destroy(this.gameObject);
+        }
+    }
 }
