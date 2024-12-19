@@ -17,6 +17,12 @@ public class BallSpawner : MonoBehaviour
 
     public float spawnRate = 2.0f;
     private float spawnTimer = 0.0f;
+    private bool m_isSpawnStart = false;
+
+    public void StartSpawn()
+    {
+        m_isSpawnStart = true;
+    }
 
     /// <summary>
     /// Ball 오브젝트를 스폰합니다.
@@ -38,6 +44,7 @@ public class BallSpawner : MonoBehaviour
                 ballComponent.endPoint2 = leftBallControlPoints[3];
                 */
                 ballComponent.SetControlPoints(spawnPoints[0], leftBallControlPoints, leftBallReturnPoints);
+                ballComponent.PlayBallSound("Racket");
             }
             spawnTimer = 0.0f;
         }
@@ -55,6 +62,7 @@ public class BallSpawner : MonoBehaviour
                 ballComponent.endPoint2 = rightBallControlPoints[3];
                 */
                 ballComponent.SetControlPoints(spawnPoints[1], rightBallControlPoints, rightBallReturnPoints);
+                ballComponent.PlayBallSound("Racket");
             }
             spawnTimer = 0.0f;
         }
@@ -72,6 +80,7 @@ public class BallSpawner : MonoBehaviour
                 ballComponent.endPoint2 = smashBallControlPoints[3];
                 */
                 ballComponent.SetControlPoints(spawnPoints[2], smashBallControlPoints, smashBallReturnPoints);
+                ballComponent.PlayBallSound("Racket");
             }
             spawnTimer = 0.0f;
         }
@@ -87,41 +96,15 @@ public class BallSpawner : MonoBehaviour
     void Update()
     {
         
-        if (spawnTimer >= spawnRate)
+        if (spawnTimer >= spawnRate && m_isSpawnStart)
         {
-            /*
-            GameObject ball = Instantiate(ballPrefabs[0],spawnPoints[0].position,Quaternion.identity);
-            Ball ballComponent = ball.GetComponent<Ball>();
-            if (ballComponent != null)
-            {
-                ballComponent.startPoint = spawnPoints[0];
-                ballComponent.controlPoint = rightBallControlPoints[0];
-                ballComponent.endPoint = rightBallControlPoints[1];
-                ballComponent.controlPoint2 = rightBallControlPoints[2];
-                ballComponent.endPoint2 = rightBallControlPoints[3];
-            }
-            spawnTimer = 0.0f;
-            */
-            int temp = Random.Range(0, 3);
-            switch (temp)
-            {
-                case 0:
-                    SpawnBall(Ball.BallType.Left);
-                    break;
-                case 1:
-                    SpawnBall(Ball.BallType.Right);
-                    break;
-                case 2:
-                    SpawnBall(Ball.BallType.Smash);
-                    break;
-                default:
-                    break;
-            }
+            SpawnBall(Ball.BallType.Left);
         }
         else
         {
             spawnTimer += Time.deltaTime;
         }
+        
         
     }
 }

@@ -32,6 +32,7 @@ public class BallChecker : MonoBehaviour
         
     }
 
+    /*
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Ball"))
@@ -41,6 +42,23 @@ public class BallChecker : MonoBehaviour
             Ball ballComponent = other.gameObject.GetComponent<Ball>();
             ballComponent.ballStatus = Ball.BallStatus.PostHit;
             ballComponent.ChangeDirection(other.gameObject.transform, ballComponent.returnControlPoint, ballComponent.returnPoint);
+            ballComponent.PlayBallSound("Racket");
+            //ballComponent.SetMovement();
+            //Destroy(other.gameObject);
+        }
+    }
+    */
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Ball"))
+        {
+            Debug.Log("Ball Checked");
+            StartCoroutine(VibrateController());
+            Ball ballComponent = other.gameObject.GetComponent<Ball>();
+            ballComponent.ballStatus = Ball.BallStatus.PostHit;
+            ballComponent.ChangeDirection(other.gameObject.transform, ballComponent.returnControlPoint, ballComponent.returnPoint);
+            ballComponent.PlayBallSound("Racket");
             //ballComponent.SetMovement();
             //Destroy(other.gameObject);
         }

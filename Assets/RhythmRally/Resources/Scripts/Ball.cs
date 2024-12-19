@@ -44,6 +44,12 @@ public class Ball : MonoBehaviour
     private Transform m_startPoint;
     private Transform m_controlPoint;
     private Transform m_endPoint;
+
+    [Header("Sounds")] 
+    public AudioClip tableCollisionSound;
+
+    public AudioClip racketCollisionSound;
+    
     
     
     private float t = 0f; // 베지에 곡선의 진행 정도 0~1
@@ -51,6 +57,7 @@ public class Ball : MonoBehaviour
     
     ////////////// Components //////////////
     private Rigidbody m_BallRb;
+    private AudioSource m_AudioSource;
 
     /// <summary>
     /// InitBall()
@@ -98,9 +105,9 @@ public class Ball : MonoBehaviour
                 break;
         }
         
-        Quaternion q = Quaternion.Euler(0f, Random.Range(10.0f, 30.0f), 0f);
+        //Quaternion q = Quaternion.Euler(0f, Random.Range(10.0f, 30.0f), 0f);
 
-        postHitDirection = q * -preHitDirection;
+        //postHitDirection = q * -preHitDirection;
     }
 
     /// <summary>
@@ -147,11 +154,16 @@ public class Ball : MonoBehaviour
         m_controlPoint = c;
         m_endPoint = e;
     }
+
+    void Awake()
+    {
+        m_BallRb = GetComponent<Rigidbody>();
+        m_AudioSource = GetComponent<AudioSource>();
+    }
     // Start is called before the first frame update
     void Start()
     {
         InitBall();
-        m_BallRb = GetComponent<Rigidbody>();
         Destroy(this.gameObject, destroyTime);
     }
 
@@ -169,7 +181,7 @@ public class Ball : MonoBehaviour
         movePos = CalculateQuadraticBezierPoint(t, m_startPoint.position, m_controlPoint.position, m_endPoint.position);
         transform.position = movePos;
 
-        if (Vector3.Distance(transform.position, endPoint2.position) <= 0.1f
+        if (Vector3.Distance(transform.position, endPoint2.position) <= 0.01f
             || Vector3.Distance(transform.position, returnPoint2.position) <= 0.1f)
         {
             Destroy(this.gameObject);
@@ -182,6 +194,7 @@ public class Ball : MonoBehaviour
         if (other.gameObject.CompareTag("Table"))
         {
             Debug.Log("Table Detected");
+            PlayBallSound("Table");
             //t = 0.0f;
             if (ballStatus == BallStatus.PreHit)
             {
@@ -192,6 +205,26 @@ public class Ball : MonoBehaviour
             {
                 ChangeDirection(returnPoint, returnControlPoint2, returnPoint2);
                 isHitTable = true;
+            }
+        }
+
+    }
+
+    public void PlayBallSound(string input)
+    {
+        if (input == "Table")
+        {
+            if (tableCollisionSound != null && m_AudioSource != null)
+            {
+                m_AudioSource.PlayOneShot(tableCollisionSound);
+            }
+        }
+        else if (input == "Racket")
+        {
+            if (racketCollisionSound != null && m_AudioSource != null)
+            {
+                Debug.Log("PlaySound");
+                m_AudioSource.PlayOneShot(racketCollisionSound);
             }
         }
     }
