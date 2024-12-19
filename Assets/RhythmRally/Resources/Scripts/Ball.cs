@@ -168,6 +168,12 @@ public class Ball : MonoBehaviour
         // 베지에 곡선을 따라 포물선 경로를 계산
         movePos = CalculateQuadraticBezierPoint(t, m_startPoint.position, m_controlPoint.position, m_endPoint.position);
         transform.position = movePos;
+
+        if (Vector3.Distance(transform.position, endPoint2.position) <= 0.1f
+            || Vector3.Distance(transform.position, returnPoint2.position) <= 0.1f)
+        {
+            Destroy(this.gameObject);
+        }
     }
     
 
@@ -176,9 +182,17 @@ public class Ball : MonoBehaviour
         if (other.gameObject.CompareTag("Table"))
         {
             Debug.Log("Table Detected");
-            t = 0.0f;
-            ChangeDirection(endPoint, controlPoint2, endPoint2);
-            isHitTable = true;
+            //t = 0.0f;
+            if (ballStatus == BallStatus.PreHit)
+            {
+                ChangeDirection(endPoint, controlPoint2, endPoint2);
+                isHitTable = true;
+            }
+            else if (ballStatus == BallStatus.PostHit)
+            {
+                ChangeDirection(returnPoint, returnControlPoint2, returnPoint2);
+                isHitTable = true;
+            }
         }
     }
 
