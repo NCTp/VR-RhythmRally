@@ -36,12 +36,41 @@ public class Ball : MonoBehaviour
     public Transform endPoint; // 도착
     public Transform controlPoint2; // 중간 지점 2
     public Transform endPoint2; // 도착
+    public Transform returnPoint; // 반대방향 테이블 지점
+    public Transform returnControlPoint; // 중간지점 3
+    public Transform returnPoint2; // 반대 테이블 부딪힌 후 이동하는 방향
+    public Transform returnControlPoint2; // 중간지점 4
+
+    private Transform m_startPoint;
+    private Transform m_controlPoint;
+    private Transform m_endPoint;
+    
     
     private float t = 0f; // 베지에 곡선의 진행 정도 0~1
     private Vector3 movePos; // 움직일 위치 결정
     
     ////////////// Components //////////////
     private Rigidbody m_BallRb;
+
+    /// <summary>
+    /// InitBall()
+    /// Ball 오브젝트의 멤버 변수들을 초기화합니다.
+    /// Ball 타입에 따라 다른 값들을 지정합니다.
+    /// </summary>
+    public void SetControlPoints(Transform startPointInput, Transform[] ControlPoints, Transform[] ReturnPoints)
+    {
+        startPoint = startPointInput;
+        controlPoint = ControlPoints[0];
+        endPoint = ControlPoints[1];
+        controlPoint2 = ControlPoints[2];
+        endPoint2 = ControlPoints[3];
+        returnPoint = ReturnPoints[0];
+        returnControlPoint = ReturnPoints[1];
+        returnPoint2 = ReturnPoints[2];
+        returnControlPoint2 = ReturnPoints[3];
+
+        ChangeDirection(startPoint, controlPoint, endPoint);
+    }
     
 
     /// <summary>
@@ -93,7 +122,6 @@ public class Ball : MonoBehaviour
                 m_BallRb.velocity = postHitDirection;
             }
         }
-        
     }
     
     /// <summary>
@@ -108,6 +136,16 @@ public class Ball : MonoBehaviour
     {
         float u = 1 - t;
         return u * u * p0 + 2 * u * t * p1 + t * t * p2;
+    }
+    /// <summary>
+    /// 공 방향을 지정
+    /// </summary>
+    public void ChangeDirection(Transform s, Transform c, Transform e)
+    {
+        t = 0;
+        m_startPoint = s;
+        m_controlPoint = c;
+        m_endPoint = e;
     }
     // Start is called before the first frame update
     void Start()
@@ -128,17 +166,10 @@ public class Ball : MonoBehaviour
         }
 
         // 베지에 곡선을 따라 포물선 경로를 계산
-        if (!isHitTable)
-        {
-            movePos = CalculateQuadraticBezierPoint(t, startPoint.position, controlPoint.position, endPoint.position);
-        }
-        else
-        {
-            movePos = CalculateQuadraticBezierPoint(t, endPoint.position, controlPoint2.position, endPoint2.position);
-        }
-        
+        movePos = CalculateQuadraticBezierPoint(t, m_startPoint.position, m_controlPoint.position, m_endPoint.position);
         transform.position = movePos;
     }
+    
 
     void OnCollisionEnter(Collision other)
     {
@@ -146,6 +177,7 @@ public class Ball : MonoBehaviour
         {
             Debug.Log("Table Detected");
             t = 0.0f;
+            ChangeDirection(endPoint, controlPoint2, endPoint2);
             isHitTable = true;
         }
     }

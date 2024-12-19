@@ -7,14 +7,21 @@ public class BallSpawner : MonoBehaviour
 {
     public Transform[] spawnPoints;
     public Transform[] leftBallControlPoints;
+    public Transform[] leftBallReturnPoints;
     public Transform[] rightBallControlPoints;
+    public Transform[] rightBallReturnPoints;
     public Transform[] smashBallControlPoints;
+    public Transform[] smashBallReturnPoints;
 
     public GameObject[] ballPrefabs;
 
     public float spawnRate = 2.0f;
     private float spawnTimer = 0.0f;
 
+    /// <summary>
+    /// Ball 오브젝트를 스폰합니다.
+    /// <param name="ballType"> 공의 타입 </param>
+    /// </summary>
     public void SpawnBall(Ball.BallType ballType)
     {
         if (ballType == Ball.BallType.Left)
@@ -23,11 +30,14 @@ public class BallSpawner : MonoBehaviour
             Ball ballComponent = ball.GetComponent<Ball>();
             if (ballComponent != null)
             {
+                /*
                 ballComponent.startPoint = spawnPoints[0];
                 ballComponent.controlPoint = leftBallControlPoints[0];
                 ballComponent.endPoint = leftBallControlPoints[1];
                 ballComponent.controlPoint2 = leftBallControlPoints[2];
                 ballComponent.endPoint2 = leftBallControlPoints[3];
+                */
+                ballComponent.SetControlPoints(spawnPoints[0], leftBallControlPoints, leftBallReturnPoints);
             }
             spawnTimer = 0.0f;
         }
@@ -37,11 +47,14 @@ public class BallSpawner : MonoBehaviour
             Ball ballComponent = ball.GetComponent<Ball>();
             if (ballComponent != null)
             {
+                /*
                 ballComponent.startPoint = spawnPoints[1];
                 ballComponent.controlPoint = rightBallControlPoints[0];
                 ballComponent.endPoint = rightBallControlPoints[1];
                 ballComponent.controlPoint2 = rightBallControlPoints[2];
                 ballComponent.endPoint2 = rightBallControlPoints[3];
+                */
+                ballComponent.SetControlPoints(spawnPoints[1], rightBallControlPoints, rightBallReturnPoints);
             }
             spawnTimer = 0.0f;
         }
@@ -51,11 +64,14 @@ public class BallSpawner : MonoBehaviour
             Ball ballComponent = ball.GetComponent<Ball>();
             if (ballComponent != null)
             {
+                /*
                 ballComponent.startPoint = spawnPoints[2];
                 ballComponent.controlPoint = smashBallControlPoints[0];
                 ballComponent.endPoint = smashBallControlPoints[1];
                 ballComponent.controlPoint2 = smashBallControlPoints[2];
                 ballComponent.endPoint2 = smashBallControlPoints[3];
+                */
+                ballComponent.SetControlPoints(spawnPoints[2], smashBallControlPoints, smashBallReturnPoints);
             }
             spawnTimer = 0.0f;
         }
