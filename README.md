@@ -1,2 +1,2 @@
-# RhythmRally
-리듬액션탁구게임
+# VR RhythmRally
+VR table tennis rhythm action game
