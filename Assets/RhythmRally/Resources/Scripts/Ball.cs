@@ -130,6 +130,11 @@ public class Ball : MonoBehaviour
             }
         }
     }
+
+    public void SetSpeed(float speed)
+    {
+        m_speed = -speed;
+    }
     
     /// <summary>
     /// 2차 베지에 곡선을 계산하는 함수
@@ -157,13 +162,13 @@ public class Ball : MonoBehaviour
 
     void Awake()
     {
+        InitBall();
         m_BallRb = GetComponent<Rigidbody>();
         m_AudioSource = GetComponent<AudioSource>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        InitBall();
         Destroy(this.gameObject, destroyTime);
     }
 

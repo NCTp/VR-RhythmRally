@@ -15,20 +15,29 @@ public class BallSpawner : MonoBehaviour
 
     public GameObject[] ballPrefabs;
 
-    public float spawnRate = 2.0f;
+    public float spawnRate = 1.295f;
     private float spawnTimer = 0.0f;
     private bool m_isSpawnStart = false;
+    private bool m_isPatternStart = false;
+
+    public float[] spawnRates;
+    public float[] ballSpeeds;
+    private int spawnCount = 0;
+
+    public AudioClip whistle;
+    private AudioSource audioSource;
+
 
     public void StartSpawn()
     {
         m_isSpawnStart = true;
+        audioSource.PlayOneShot(whistle);
     }
-
     /// <summary>
     /// Ball 오브젝트를 스폰합니다.
     /// <param name="ballType"> 공의 타입 </param>
     /// </summary>
-    public void SpawnBall(Ball.BallType ballType)
+    public void SpawnBall(Ball.BallType ballType, float newSpeed)
     {
         if (ballType == Ball.BallType.Left)
         {
@@ -45,7 +54,10 @@ public class BallSpawner : MonoBehaviour
                 */
                 ballComponent.SetControlPoints(spawnPoints[0], leftBallControlPoints, leftBallReturnPoints);
                 ballComponent.PlayBallSound("Racket");
+                ballComponent.SetSpeed(newSpeed);
             }
+
+            spawnCount++;
             spawnTimer = 0.0f;
         }
         else if (ballType == Ball.BallType.Right)
@@ -63,7 +75,9 @@ public class BallSpawner : MonoBehaviour
                 */
                 ballComponent.SetControlPoints(spawnPoints[1], rightBallControlPoints, rightBallReturnPoints);
                 ballComponent.PlayBallSound("Racket");
+                ballComponent.SetSpeed(newSpeed);
             }
+            spawnCount++;
             spawnTimer = 0.0f;
         }
         else if (ballType == Ball.BallType.Smash)
@@ -81,7 +95,9 @@ public class BallSpawner : MonoBehaviour
                 */
                 ballComponent.SetControlPoints(spawnPoints[2], smashBallControlPoints, smashBallReturnPoints);
                 ballComponent.PlayBallSound("Racket");
+                ballComponent.SetSpeed(newSpeed);
             }
+            spawnCount++;
             spawnTimer = 0.0f;
         }
     }
@@ -89,21 +105,36 @@ public class BallSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        if (spawnTimer >= spawnRate && m_isSpawnStart)
+        if (spawnRates.Length > spawnCount)
+        {
+            if (spawnTimer >= spawnRates[spawnCount] && m_isSpawnStart)
+            {
+                SpawnBall(Ball.BallType.Left, ballSpeeds[spawnCount]);
+
+            }
+            else
+            {
+                spawnTimer += Time.deltaTime;
+            }
+        }
+        /*
+        if (spawnTimer >= spawnRates[spawnCount] && m_isSpawnStart)
         {
             SpawnBall(Ball.BallType.Left);
+
         }
         else
         {
-            spawnTimer += Time.deltaTime;
+           spawnTimer += Time.deltaTime;
         }
+        */
+        
         
         
     }

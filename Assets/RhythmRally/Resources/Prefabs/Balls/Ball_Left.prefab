@@ -122,7 +122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballType: 0
   ballStatus: 0
-  destroyTime: 100
+  destroyTime: 5
   speed: 3
   isHitTable: 0
   preHitDirection: {x: 0, y: 0, z: 0}

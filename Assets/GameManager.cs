@@ -13,6 +13,8 @@ public class GameManager : Singleton<GameManager>
     public Vector3 xrOriginPosOffset;
 
     public BallSpawner ballSpawner;
+
+    private bool isGameStarted = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,13 +27,18 @@ public class GameManager : Singleton<GameManager>
     void Update()
     {
         xrOrigin.transform.position = xrOriginPosOffset;
-        if (startTimer >= ballSpawnStartTime)
+        if (!isGameStarted)
         {
-            ballSpawner.StartSpawn();
+            if (startTimer >= ballSpawnStartTime)
+            {
+                ballSpawner.StartSpawn();
+                isGameStarted = true;
+            }
+            else
+            {
+                startTimer += Time.deltaTime;
+            }
         }
-        else
-        {
-            startTimer += Time.deltaTime;
-        }
+
     }
 }
